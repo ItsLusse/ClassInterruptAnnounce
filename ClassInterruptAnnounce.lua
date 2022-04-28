@@ -38,8 +38,6 @@ local mytyp = ""
 
 local procctimer = ""
 
-local combopoints = "0"
-
 local channel = "SAY"
 
 local channelid = ""
@@ -695,7 +693,6 @@ CiaOnUpdateTimer = nil
 CiaUpdateFetchSpells = nil
 CiaUpdateFetchCD = nil
 CiaUpdateChannelChange = nil
-CiaUpdateGetCP = nil
 
 function CiaOnUpdate:OnUpdate()
 	if CiaOnUpdateTimerActive == true then
@@ -719,11 +716,6 @@ function CiaOnUpdate:OnUpdate()
 			if CiaUpdateChannelChange == true then
 				Cia_ChangeChannel()
 				CiaOnUpdateActivate("channelchange")
-			end
-
-			if CiaUpdateGetCP == true then
-				combopoints = GetComboPoints("player", "target")
-				CiaOnUpdateActivate("getcp")
 			end
 		end
     end
@@ -766,18 +758,6 @@ function CiaOnUpdateActivate(arg)
 			CiaOnUpdateTimer = GetTime();
 			CiaOnUpdateTimerActive = true
 			CiaUpdateChannelChange = true
-        end
-	end
-
-	if arg == "getcp" then
-		if CiaOnUpdateTimerActive == true then
-			CiaOnUpdateTimerActive  = nil
-			CiaOnUpdateTimer = nil
-			CiaUpdateGetCP = nil
-		else
-			CiaOnUpdateTimer = GetTime();
-			CiaOnUpdateTimerActive = true
-			CiaUpdateGetCP = true
         end
 	end
 end
@@ -853,7 +833,6 @@ function Cia:OnEvent()
 	elseif event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
 
 		procctimer = math.floor(GetTime())
-		CiaOnUpdateActivate("getcp")
 
 		if string.find(arg1,"You interrupt (.+)") then
 			for k,IntTargets in pairs(IntTargets) do
@@ -954,19 +933,10 @@ function Cia:OnEvent()
 				end
 				if UnitClass("player") == "Rogue" then
 					if spell == "Expose Armor" then
-						--if combopoints == 5 then
-							mytarget = unit
-							myspell = spell
-							intspell = ""
-							Cia_Send(mytarget, myspell, intspell, mytyp)
-						--else
-						--	_,_,_,_,TalentsIn=GetTalentInfo(1,8)
-						--	if TalentsIn>0 then
-						--		SendChatMessage("Expose Armor'd "..unit.." with ONLY "..combopoints.." CP!",channel)
-						--	else
-						--		SendChatMessage("Expose Armor'd "..unit.." (NOT IMPROVED) with ONLY "..combopoints.." CP!",channel)
-						--	end
-						--end
+						mytarget = unit
+						myspell = spell
+						intspell = ""
+						Cia_Send(mytarget, myspell, intspell, mytyp)
 					end
 				end
 			end
@@ -974,7 +944,6 @@ function Cia:OnEvent()
 
 		procctimer = ""
 		timeSinceStart = ""
-		combopoints = "0"
 
 	elseif event == "CHAT_MSG_SPELL_PET_DAMAGE" then
 		if string.find(arg1,".+'s .+ was .+ by .+.") then

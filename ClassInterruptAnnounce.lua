@@ -190,7 +190,7 @@ local IntTargets = { -- List of npcs you'll announce when interrupting
 	"Necro Knight",
 	"Necro Knight Guardian",
 	"Mad Scientist",
-	"Unrelenting Rider", --??
+	"Spectral Trainee",
 	-- BWL
 	"Blackwing Warlock",
 	"Blackwing Technician",
@@ -215,6 +215,8 @@ local StunTargets = { -- List of npcs you'll announce when stunning
     "Spirit of Naxxramas",
     "Plagued Construct",
     "Deathknight Servant",
+	"Spectral Death Knight",
+	"Spectral Rider",
 	-- ZG
 	"Hakkari Priest",
 	"Voodoo Slave",

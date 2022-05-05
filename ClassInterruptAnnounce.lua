@@ -117,6 +117,7 @@ SpellIcons = {
 	["Glimpse of Madness"] = "Interface\\Icons\\inv_axe_24",
 	["Earthshaker"] = "Interface\\Icons\\inv_hammer_04",
 	["Disarm Trap"] = "Interface\\Icons\\spell_shadow_grimward",
+	["Puncture Armor"] = "Interface\\Icons\\inv_mace_15",
 }
 
 local Interrupts = {
@@ -166,6 +167,9 @@ local WeaponProccs = {
 	"Armor Shatter (2)", -- Annihilator 2 stacks
 	"Armor Shatter (3)", -- Annihilator 3 stacks
 	"Spell Vulnerability", -- Nightfall
+	"Puncture Armor", -- Bashguuder/Rivenspike 1 stack
+	"Puncture Armor (2)", -- Bashguuder/Rivenspike 2 stacks
+	"Puncture Armor (3)", -- Bashguuder/Rivenspike 3 stacks
 }
 
 local SpecialInterrupts = {
@@ -514,6 +518,30 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 					SendChatMessage("Nightfall procc'd "..mytarget.."!", "CHANNEL", nil, channelid);
 				else
 					SendChatMessage("Nightfall procc'd "..mytarget.."!",channel)
+				end
+			end
+		elseif myspell == "Puncture Armor" then
+			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Mace_15" or GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Pick_05" then
+				if channeldrop == 5 then
+					SendChatMessage(myspell.."'d (1) "..mytarget.."!", "CHANNEL", nil, channelid);
+				else
+					SendChatMessage(myspell.."'d (1) "..mytarget.."!",channel)
+				end
+			end
+		elseif myspell == "Puncture Armor (2)" then
+			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Mace_15" or GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Pick_05" then
+				if channeldrop == 5 then
+					SendChatMessage("Puncture Armor'd (2) "..mytarget.."!", "CHANNEL", nil, channelid);
+				else
+					SendChatMessage("Puncture Armor'd (2) "..mytarget.."!",channel)
+				end
+			end
+		elseif myspell == "Puncture Armor (3)" then
+			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Mace_15" or GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Pick_05" then
+				if channeldrop == 5 then
+					SendChatMessage("Puncture Armor'd (3) "..mytarget.."!", "CHANNEL", nil, channelid);
+				else
+					SendChatMessage("Puncture Armor'd (3) "..mytarget.."!",channel)
 				end
 			end
 		end
@@ -1513,7 +1541,7 @@ function Cia.Options:Gui()
 	self.Weapons = CreateFrame("Frame",nil,self.Background.Tab2)
 	self.Weapons:SetFrameStrata("MEDIUM")
 	self.Weapons:SetWidth(300)
-	self.Weapons:SetHeight(140)
+	self.Weapons:SetHeight(190)
 	self.Weapons:SetPoint('TOP', 0, -20)
 	self.Weapons:SetBackdrop(backdrop)
 	self.Weapons:SetBackdropColor(0,0,0,1)
@@ -1547,6 +1575,20 @@ function Cia.Options:Gui()
 
 		local Checkbox = Cia:CreateCheckbox("Earthshaker",self.Weapons,"|cffa335eeEarthshaker")
 		Checkbox:SetPoint("TOP",65, -80)
+
+		local Checkbox = Cia:CreateCheckbox("Puncture Armor",self.Weapons,"|cff0070ddBashguuder/Rivenspike")
+		Checkbox:SetPoint("TOP",0, -140)
+		Checkbox:SetScript("OnClick", function ()
+			if Checkbox:GetChecked() == nil then 
+				Cia_Settings["Puncture Armor"] = nil
+				Cia_Settings["Puncture Armor (2)"] = nil
+				Cia_Settings["Puncture Armor (3)"] = nil
+			elseif Checkbox:GetChecked() == 1 then 
+				Cia_Settings["Puncture Armor"] = 1
+				Cia_Settings["Puncture Armor (2)"] = 1
+				Cia_Settings["Puncture Armor (3)"] = 1
+			end
+		end)
 
 	-- button close
 	self.CloseButton = CreateFrame("Button",CloseButton,self,"UIPanelCloseButton")

@@ -952,7 +952,7 @@ function Cia:OnEvent()
 				end
 			end
 
-			if UnitClassification("target") ==  "worldboss" then
+			if UnitClassification("target") ==  "worldboss" or UnitName("target") == "Anubisath Defender" then
 				for k,WeaponProccs in pairs(WeaponProccs) do 
 					if spell == WeaponProccs then
 						mytarget = unit

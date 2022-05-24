@@ -185,6 +185,7 @@ local IntTargets = { -- List of npcs you'll announce when interrupting
 	"Princess Yauj",
 	"Obsidian Eradicator",
 	"Qiraji Brainwasher",
+	"Qiraji Mindslayer",
 	"Eye Tentacle",
 	"Giant Eye Tentacle",
 	-- Naxx
@@ -219,6 +220,8 @@ local StunTargets = { -- List of npcs you'll announce when stunning
     "Spirit of Naxxramas",
     "Plagued Construct",
     "Deathknight Servant",
+	"Death Touched Warrior",
+	"Doom Touched Warrior",
 	"Spectral Death Knight",
 	"Spectral Rider",
 	-- ZG
@@ -232,6 +235,10 @@ local StunTargets = { -- List of npcs you'll announce when stunning
     "Sartura's Royal Guard",
     "Battleguard Sartura",
 	"Spawn of Fankriss",
+	"Eye Tentacle",
+	"Giant Eye Tentacle",
+	"Claw Tentacle",
+	"Giant Claw Tentacle",
 }
 
 local function print(text)

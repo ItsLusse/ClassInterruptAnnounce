@@ -2,7 +2,7 @@
 ## Title: Class Interrupt Announce | |cff69CCFFLusse|r
 ## Notes: Gives you the option to announce your class's stuns & interrupts on selected raid npcs. 
 ## Author: Lusse
-## Version: 1.5
+## Version: 1.6
 ## SavedVariables: Cia_Settings
 
 ClassInterruptAnnounce.lua

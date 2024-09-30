@@ -1507,13 +1507,13 @@ function Cia.Options:Gui()
 	self.CustomChannelEditBox:SetAutoFocus(false)
 	self.CustomChannelEditBox:ClearFocus()
 	self.CustomChannelEditBox:SetText(UnitName("player"))
-	self.CustomChannelEditBox:SetScript("OnEnterPressed", function()
+	self.CustomChannelEditBox:SetScript("OnEscapePressed", function()
 		if self.CustomChannelEditBox:GetText() ~= "" then
 			local n = self.CustomChannelEditBox:GetText()
 			if n then
 				local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
 				Cia.Options.CustomChannelEditBox:SetText(name)
-				print("Custom Channel set to: |cffffff00"..name.."|r")
+				print("Custom channel set to: |cffffff00"..name.."|r")
 			end
 			
 			New_Custom_Channel = self.CustomChannelEditBox:GetText()
@@ -1523,6 +1523,24 @@ function Cia.Options:Gui()
 		end
 		self.CustomChannelEditBox:ClearFocus()
 	end)
+
+	self.CustomChannelEditBox:SetScript("OnEnterPressed", function()
+		if self.CustomChannelEditBox:GetText() ~= "" then
+			local n = self.CustomChannelEditBox:GetText()
+			if n then
+				local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
+				Cia.Options.CustomChannelEditBox:SetText(name)
+				print("Custom channel set to: |cffffff00"..name.."|r")
+			end
+			
+			New_Custom_Channel = self.CustomChannelEditBox:GetText()
+			Cia_ChangeChannel()
+		else
+			print("|cffff0000You need to enter a channel name in the editbox.|r")
+		end
+		self.CustomChannelEditBox:ClearFocus()
+	end)
+	
 	self.CustomChannelEditBox:SetScript("OnChar", function()
 		local n = self.CustomChannelEditBox:GetText()
 		if n then 
@@ -1774,7 +1792,7 @@ function Cia.Options:ChannelDrop()
 					if n then
 						local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
 						Cia.Options.CustomChannelEditBox:SetText(name)
-						print("Custom Channel set to: |cffffff00"..name.."|r")
+						print("Custom channel set to: |cffffff00"..name.."|r")
 					end
 
 					New_Custom_Channel = Cia.Options.CustomChannelEditBox:GetText()
@@ -1786,6 +1804,7 @@ function Cia.Options:ChannelDrop()
 				channelid = GetChannelName(Cia_Settings["customchannel"])
 				channeldrop = this:GetID()
 			else
+				LeaveChannelByName(Cia_Settings["customchannel"]);
 				Cia.Options.CustomChannelEditBox:Hide()
 				channel = selectedchannel
 				channeldrop = this:GetID()

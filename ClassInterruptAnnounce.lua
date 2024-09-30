@@ -1501,20 +1501,25 @@ function Cia.Options:Gui()
 	self.CustomChannelEditBox = CreateFrame("EditBox",CustomChannelEditBox,self.Class,"InputBoxTemplate")
 	self.CustomChannelEditBox:SetFontObject("GameFontHighlight")
 	self.CustomChannelEditBox:SetFrameStrata("MEDIUM")
-	self.CustomChannelEditBox:SetPoint("TOP", 90 , -260)
-	self.CustomChannelEditBox:SetWidth(120)
+	self.CustomChannelEditBox:SetPoint("TOP", 70 , -260)
+	self.CustomChannelEditBox:SetWidth(80)
 	self.CustomChannelEditBox:SetHeight(30)
 	self.CustomChannelEditBox:SetAutoFocus(false)
 	self.CustomChannelEditBox:ClearFocus()
+	self.CustomChannelEditBox:SetText(UnitName("player"))
 	self.CustomChannelEditBox:SetScript("OnEnterPressed", function()
 		if self.CustomChannelEditBox:GetText() ~= "" then
-			New_Custom_Channel = Cia.Options.CustomChannelEditBox:GetText()
+			local n = self.CustomChannelEditBox:GetText()
+			if n then
+				local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
+				Cia.Options.CustomChannelEditBox:SetText(name)
+				print("Custom Channel set to: |cffffff00"..name.."|r")
+			end
+			
+			New_Custom_Channel = self.CustomChannelEditBox:GetText()
 			Cia_ChangeChannel()
 		else
-			New_Custom_Channel = UnitName("player")
-			print("|cffff0000No channel named entered...|r Joining |cffffff00"..New_Custom_Channel.."|r")
-			Cia_ChangeChannel()
-			self.CustomChannelEditBox:SetText(New_Custom_Channel)
+			print("|cffff0000You need to enter a channel name in the editbox.|r")
 		end
 		self.CustomChannelEditBox:ClearFocus()
 	end)
@@ -1645,7 +1650,7 @@ function Cia_ChangeChannel()
 			Cia_Settings["customchannel"] = New_Custom_Channel;
 			channelid = GetChannelName(Cia_Settings["customchannel"])
 			-- Announce the action
-			print("|cffffff00"..Cia_Settings["customchannel"].."|r")
+			--print("|cffffff00"..Cia_Settings["customchannel"].."|r")
 		else
 			-- It doesn't exist yet, re-try
 			CiaOnUpdateActivate("channelchange")
@@ -1764,13 +1769,20 @@ function Cia.Options:ChannelDrop()
 
 			if selectedchannel == "CUSTOM" then
 				Cia.Options.CustomChannelEditBox:Show()
-				local n = Cia_Settings["customchannel"]
-				if n then
-					local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
-					Cia.Options.CustomChannelEditBox:SetText(name)
-					print("Custom Channel set to: |cffffff00"..name.."|r")
+				if Cia.Options.CustomChannelEditBox:GetText() ~= "" then
+					local n = Cia_Settings["customchannel"]
+					if n then
+						local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
+						Cia.Options.CustomChannelEditBox:SetText(name)
+						print("Custom Channel set to: |cffffff00"..name.."|r")
+					end
+
+					New_Custom_Channel = Cia.Options.CustomChannelEditBox:GetText()
+					Cia_ChangeChannel()
+				else
+					print("|cffff0000You need to enter a channel name in the editbox.|r")
 				end
-				--Cia.Options.CustomChannelEditBox:SetText(Cia_Settings["customchannel"])
+
 				channelid = GetChannelName(Cia_Settings["customchannel"])
 				channeldrop = this:GetID()
 			else
@@ -1781,13 +1793,13 @@ function Cia.Options:ChannelDrop()
 				local channelname = string.upper(string.sub(selectedchannel,1,1))..string.lower(string.sub(selectedchannel,2))
 
 				if selectedchannel == "SAY" then
-					print("Custom announce channel set to: "..channelname)
+					print("Announce channel set to: "..channelname)
 				elseif selectedchannel == "YELL" then
 					print("Announce channel set to: |cffff0000"..channelname.."|r")
 				elseif selectedchannel == "PARTY" then
-						print("Announce channel set to: |cff00ccff"..channelname.."|r")
+					print("Announce channel set to: |cff00ccff"..channelname.."|r")
 				elseif selectedchannel == "RAID" then
-						print("Announce channel set to: |cffFF7D0A"..channelname.."|r")
+					print("Announce channel set to: |cffFF7D0A"..channelname.."|r")
 				end
 			end
 		end

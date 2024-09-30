@@ -1101,6 +1101,10 @@ function Cia.Options:Gui()
 		this:StopMovingOrSizing()
 	end
 
+	-- Close with esc button
+	tinsert(UISpecialFrames, Cia.Options:GetName())
+
+	-- test
 	backdrop = {
 		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
 	}
@@ -1540,7 +1544,7 @@ function Cia.Options:Gui()
 		end
 		self.CustomChannelEditBox:ClearFocus()
 	end)
-	
+
 	self.CustomChannelEditBox:SetScript("OnChar", function()
 		local n = self.CustomChannelEditBox:GetText()
 		if n then 

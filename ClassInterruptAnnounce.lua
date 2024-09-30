@@ -28,7 +28,7 @@ Cia_Channels = {
 	[2] = "|cffff0000YELL",
 	[3] = "|cff00ccffPARTY",
 	[4] = "|cffFF7D0ARAID",
-	[5] = "|cffFF4500CUSTOM",
+	[5] = "|cffffff00CUSTOM",
 }
 
 local mytarget = ""
@@ -206,6 +206,10 @@ local IntTargets = { -- List of npcs you'll announce when interrupting
 	"High Priestess Jeklik",
 	"Zealot Lor'Khan",
 	"Voodoo Slave",
+	-- Wailing Caverns
+	"Druid of the Fang",
+	-- Deadmines
+	"Goblin Engineer",
 }
 
 local StunTargets = { -- List of npcs you'll announce when stunning
@@ -239,10 +243,14 @@ local StunTargets = { -- List of npcs you'll announce when stunning
 	"Giant Eye Tentacle",
 	"Claw Tentacle",
 	"Giant Claw Tentacle",
+	-- Wailing Caverns
+	"Druid of the Fang",
+	-- Deadmines
+	"Goblin Engineer",
 }
 
 local function print(text)
-	DEFAULT_CHAT_FRAME:AddMessage(text)
+	DEFAULT_CHAT_FRAME:AddMessage(Cia_GetClassColorForName(UnitClass("player")).."Class |cffffffffInterrupt |cffff0000Announce|r: "..text)
 end
 
 function GetSpells()
@@ -583,7 +591,7 @@ end
 function PetSpellNum(spell)
 	local i
 	for i=1,20 do
-		local name,rank,texture,somtin,somtinelse,isAutocast,IsAutocastable=GetPetActionInfo(i)
+		local name,rank,texture,isToken,isActive,isAutocast,IsAutocastable=GetPetActionInfo(i)
 		if name==spell then return i end
 	end
 end
@@ -664,7 +672,7 @@ function Cia_Check()
 			if Cia_Settings[spell] == 1 then
 				if SpellExists(spell) then
 					for k,Interrupts in pairs(Interrupts) do
-						if spell == Interrupts then
+						if target == Interrupts then
 							local start, duration, enabled = GetSpellCooldown(spelltable[spell],"BOOKTYPE_SPELL")
 
 							if tonumber(duration) <= 1.5 then
@@ -804,7 +812,7 @@ function Cia:OnEvent()
         CiaOnUpdateActivate("fetchspells")
 		Cia.Options:Gui()
 		Cia.Minimap:CreateMinimapIcon()
-		print(Cia_GetClassColorForName(UnitClass("player")).."Class |cffffffffInterrupt |cffff0000Announce|r Loaded - "..Cia_Version_Msg)
+		print("Loaded - "..Cia_Version_Msg)
 		
 		if (not Cia_Settings["customchannel"]) then
 			Cia_Settings["customchannel"] = "cia"; -- The default used (private chan, guild, say, party etc)
@@ -1002,7 +1010,7 @@ function Cia:OnEvent()
 		if string.find(arg1,".+ interrupts .+'s .+.") then
 			for k,IntTargets in pairs(IntTargets) do
 				local _,_,mypet,unit,cast= string.find(arg1,"(.+) interrupts (.+)'s (.+).")
-				if unit == IntTargets then 
+				if unit == IntTargets then
 					mytarget = unit
 					myspell = ""
 					intspell = cast
@@ -1489,7 +1497,7 @@ function Cia.Options:Gui()
 	UIDropDownMenu_Initialize(self.ChannelDropdown, Cia.Options.ChannelDrop)
 	UIDropDownMenu_SetSelectedID(self.ChannelDropdown, Cia_Settings["channel"])
 
-	-- ButtonsEditBox
+	-- CustomChannelEditBox
 	self.CustomChannelEditBox = CreateFrame("EditBox",CustomChannelEditBox,self.Class,"InputBoxTemplate")
 	self.CustomChannelEditBox:SetFontObject("GameFontHighlight")
 	self.CustomChannelEditBox:SetFrameStrata("MEDIUM")
@@ -1503,7 +1511,10 @@ function Cia.Options:Gui()
 			New_Custom_Channel = Cia.Options.CustomChannelEditBox:GetText()
 			Cia_ChangeChannel()
 		else
-			print("|cffff0000You need to enter a channel name...|r")
+			New_Custom_Channel = UnitName("player")
+			print("|cffff0000No channel named entered...|r Joining |cffffff00"..New_Custom_Channel.."|r")
+			Cia_ChangeChannel()
+			self.CustomChannelEditBox:SetText(New_Custom_Channel)
 		end
 		self.CustomChannelEditBox:ClearFocus()
 	end)
@@ -1515,6 +1526,14 @@ function Cia.Options:Gui()
 		end
 	end)
 	self.CustomChannelEditBox:Hide()
+
+	--CustomChannelEditBox text
+	local text = self.CustomChannelEditBox:CreateFontString(nil, "OVERLAY")
+	text:SetPoint("TOPLEFT", -2, 10)
+	text:SetFont("Fonts\\FRIZQT__.TTF", 10)
+	text:SetTextColor(1, 1, 1, 1)
+	text:SetShadowOffset(2,-2)
+	text:SetText("Enter custom channel:")
 
 	-- minimap option
 	self.CheckboxMinimap = CreateFrame("CheckButton", "Minimap", self, "UICheckButtonTemplate")
@@ -1528,12 +1547,12 @@ function Cia.Options:Gui()
 		elseif self.CheckboxMinimap:GetChecked() == 1 then 
 			Cia_Settings["Minimap"] = 1 
 		end
-		end)
-		self.CheckboxMinimap:SetScript("OnEnter", function() 
-			GameTooltip:SetOwner(self.CheckboxMinimap, "ANCHOR_RIGHT");
-			GameTooltip:SetText("Turn on/off", 255, 255, 0, 1, 1);
-			GameTooltip:Show()
-		end)
+	end)
+	self.CheckboxMinimap:SetScript("OnEnter", function() 
+		GameTooltip:SetOwner(self.CheckboxMinimap, "ANCHOR_RIGHT");
+		GameTooltip:SetText("Turn on/off", 255, 255, 0, 1, 1);
+		GameTooltip:Show()
+	end)
 	self.CheckboxMinimap:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	self.CheckboxMinimap:SetChecked(Cia_Settings["Minimap"])
 	self.textMinimap = self.CheckboxMinimap:CreateFontString(nil, "OVERLAY")
@@ -1626,7 +1645,7 @@ function Cia_ChangeChannel()
 			Cia_Settings["customchannel"] = New_Custom_Channel;
 			channelid = GetChannelName(Cia_Settings["customchannel"])
 			-- Announce the action
-			print("Custom Channel set to: "..Cia_Settings["customchannel"]);
+			print("|cffffff00"..Cia_Settings["customchannel"].."|r")
 		else
 			-- It doesn't exist yet, re-try
 			CiaOnUpdateActivate("channelchange")
@@ -1749,7 +1768,7 @@ function Cia.Options:ChannelDrop()
 				if n then
 					local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
 					Cia.Options.CustomChannelEditBox:SetText(name)
-					print("Custom Channel set to: "..name)
+					print("Custom Channel set to: |cffffff00"..name.."|r")
 				end
 				--Cia.Options.CustomChannelEditBox:SetText(Cia_Settings["customchannel"])
 				channelid = GetChannelName(Cia_Settings["customchannel"])
@@ -1758,6 +1777,18 @@ function Cia.Options:ChannelDrop()
 				Cia.Options.CustomChannelEditBox:Hide()
 				channel = selectedchannel
 				channeldrop = this:GetID()
+
+				local channelname = string.upper(string.sub(selectedchannel,1,1))..string.lower(string.sub(selectedchannel,2))
+
+				if selectedchannel == "SAY" then
+					print("Custom announce channel set to: "..channelname)
+				elseif selectedchannel == "YELL" then
+					print("Announce channel set to: |cffff0000"..channelname.."|r")
+				elseif selectedchannel == "PARTY" then
+						print("Announce channel set to: |cff00ccff"..channelname.."|r")
+				elseif selectedchannel == "RAID" then
+						print("Announce channel set to: |cffFF7D0A"..channelname.."|r")
+				end
 			end
 		end
 		info.checked = nil

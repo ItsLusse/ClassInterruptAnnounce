@@ -1104,7 +1104,6 @@ function Cia.Options:Gui()
 	-- Close with esc button
 	tinsert(UISpecialFrames, Cia.Options:GetName())
 
-	-- test
 	backdrop = {
 		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
 	}

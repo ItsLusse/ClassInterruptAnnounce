@@ -1,8 +1,8 @@
 ## Interface: 11200
-## Title: Class Interrupt Announce | |cff69CCFFLusse|r
-## Notes: Gives you the option to announce your class's stuns & interrupts on selected raid npcs aswell as useful weapon proccs on bosses. 
+## Title: Class Interrupt Announce
+## Notes: Gives you the option to announce your class's stuns & interrupts on selected raid npcs aswell as useful weapon proccs on bosses. Created by |cff69CCFFLusse|r aka |cffFF7D0ACliffholger|r
 ## Author: Lusse
-## Version: 1.6
+## Version: 1.8
 ## SavedVariables: Cia_Settings
 
 ClassInterruptAnnounce.lua

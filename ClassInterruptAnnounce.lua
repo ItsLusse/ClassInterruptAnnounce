@@ -24,11 +24,18 @@ Cia_Settings = Cia_Settings or {}
 spelltable = {}
 
 Cia_Channels = {
-	[1] = "|cffffffffSAY",
-	[2] = "|cffff0000YELL",
-	[3] = "|cff00ccffPARTY",
-	[4] = "|cffFF7D0ARAID",
-	[5] = "|cffffff00CUSTOM",
+	[1] = "|cffffffffNONE",
+	[2] = "|cffffffffSAY",
+	[3] = "|cffff0000YELL",
+	[4] = "|cff00ccffPARTY",
+	[5] = "|cffFF7D0ARAID",
+	[6] = "|cffffff00CUSTOM",
+}
+
+Cia_BlackListed_Channels = {
+	[1] = "Hardcore",
+	[2] = "World",
+	[3] = "General",
 }
 
 local mytarget = ""
@@ -41,7 +48,7 @@ local procctimer = ""
 local channel = "SAY"
 
 local channelid = ""
-local channeldrop = ""
+local channeldrop = 1
 local New_Custom_Channel = nil -- For changing channels
 
 
@@ -206,10 +213,24 @@ local IntTargets = { -- List of npcs you'll announce when interrupting
 	"High Priestess Jeklik",
 	"Zealot Lor'Khan",
 	"Voodoo Slave",
+	-- 10man and under
 	-- Wailing Caverns
 	"Druid of the Fang",
 	-- Deadmines
 	"Goblin Engineer",
+	-- Ragefire Chasm
+	"Ragefire Shaman",
+	"Searing Blade Warlock",
+	-- MURLOCS
+	"Murloc Oracle",
+	"Murloc Tidecaller",
+	"Murloc Minor Oracle",
+	"Murloc Flesheater",
+	"Bluegill Oracle",
+	"Blackfathom Tide Priestess",
+	"Murloc Coastrunner",
+	-- Other
+	"Kurzen Medicine Man",
 }
 
 local StunTargets = { -- List of npcs you'll announce when stunning
@@ -243,10 +264,26 @@ local StunTargets = { -- List of npcs you'll announce when stunning
 	"Giant Eye Tentacle",
 	"Claw Tentacle",
 	"Giant Claw Tentacle",
+
+	-- 10man and under
 	-- Wailing Caverns
 	"Druid of the Fang",
 	-- Deadmines
 	"Goblin Engineer",
+	"Edwin VanCleef",
+	-- Ragefire Chasm
+	"Ragefire Shaman",
+	"Searing Blade Warlock",
+	-- MURLOCS
+	"Murloc Oracle",
+	"Murloc Tidecaller",
+	"Murloc Minor Oracle",
+	"Murloc Flesheater",
+	"Bluegill Oracle",
+	"Blackfathom Tide Priestess",
+	"Murloc Coastrunner",
+	-- Other
+	"Kurzen Medicine Man",
 }
 
 local function print(text)
@@ -304,16 +341,20 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 
 				if intspell ~= "" then 
 					if cooldown > tonumber(duration)-0.6 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(myspell.."'d "..mytarget.."'s "..intspell.." - "..duration.."s CD!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(myspell.."'d "..mytarget.."'s "..intspell.." - "..duration.."s CD!",channel)
 						end
 					end
 				else
 					if cooldown > tonumber(duration)-0.6 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(myspell.."'d "..mytarget.." - "..duration.."s CD!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(myspell.."'d "..mytarget.." - "..duration.."s CD!",channel)
 						end
@@ -326,8 +367,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 				_,_,_,_,TalentsIn=GetTalentInfo(3,2)
 				if TalentsIn>0 then
 					if Cia_Settings[myspell] == 1 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(myspell.." stunned "..mytarget.."!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(myspell.." stunned "..mytarget.."!",channel)
 						end
@@ -339,8 +382,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 				_,_,_,_,TalentsIn=GetTalentInfo(3,12)
 				if TalentsIn>0 then
 					if Cia_Settings[myspell] == 1 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(myspell.." stunned "..mytarget.."!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(myspell.." stunned "..mytarget.."!",channel)
 						end
@@ -352,8 +397,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 				_,_,_,_,TalentsIn=GetTalentInfo(2,2)
 				if TalentsIn>0 then
 					if Cia_Settings[myspell] == 1 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(myspell.." stunned "..mytarget.."!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(myspell.." stunned "..mytarget.."!",channel)
 						end
@@ -368,8 +415,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 					local cooldown = duration-(GetTime()-start)
 					if Cia_Settings[myspell] == 1 then
 						if cooldown > tonumber(duration)-0.4 then
-							if channeldrop == 5 then
+							if channeldrop == 6 then
 								SendChatMessage(myspell.." "..mytarget.." - "..duration.."s CD!", "CHANNEL", nil, channelid);
+							elseif channeldrop == 1 then
+								-- Do nothing
 							else
 								SendChatMessage(myspell.." "..mytarget.." - "..duration.."s CD!",channel)
 							end
@@ -385,8 +434,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 					local cooldown = duration-(GetTime()-start)
 					if Cia_Settings[myspell] == 1 then
 						if cooldown > tonumber(duration)-0.4 then
-							if channeldrop == 5 then
+							if channeldrop == 6 then
 								SendChatMessage("Shield Bash silenced "..mytarget.." - "..duration.."s CD!", "CHANNEL", nil, channelid);
+							elseif channeldrop == 1 then
+								-- Do nothing
 							else
 								SendChatMessage("Shield Bash silenced "..mytarget.." - "..duration.."s CD!",channel)
 							end
@@ -399,8 +450,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 				_,_,_,_,TalentsIn=GetTalentInfo(1,12)
 				if TalentsIn>0 then
 					if Cia_Settings[myspell] == 1 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage("Starfire stunned "..mytarget.."!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage("Starfire stunned "..mytarget.."!",channel)
 						end
@@ -412,8 +465,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 				_,_,_,_,TalentsIn=GetTalentInfo(2,13)
 				if TalentsIn>0 then
 					if Cia_Settings[myspell] == 1 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage("Mace Stun stunned "..mytarget.."!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage("Mace Stun stunned "..mytarget.."!",channel)
 						end
@@ -423,8 +478,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 				_,_,_,_,TalentsIn=GetTalentInfo(1,14)
 				if TalentsIn>0 then
 					if Cia_Settings[myspell] == 1 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage("Mace Stun stunned "..mytarget.."!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage("Mace Stun stunned "..mytarget.."!",channel)
 						end
@@ -440,8 +497,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 					local cooldown = duration-(GetTime()-start)
 					if Cia_Settings[myspell] == 1 then
 						if cooldown > tonumber(duration)-0.4 then
-							if channeldrop == 5 then
+							if channeldrop == 6 then
 								SendChatMessage(myspell.." "..mytarget.." - "..duration.."s CD!", "CHANNEL", nil, channelid);
+							elseif channeldrop == 1 then
+								-- Do nothing
 							else
 								SendChatMessage(myspell.." "..mytarget.." - "..duration.."s CD!",channel)
 							end
@@ -458,14 +517,18 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 					if Cia_Settings[myspell] == 1 then
 						if cooldown > tonumber(duration)-0.4 then
 							if mytyp == stringsMiss[hitType] then
-								if channeldrop == 5 then
+								if channeldrop == 6 then
 									SendChatMessage(">>>MISSED<<< "..myspell.." on "..mytarget.." ("..mytyp..") - "..duration.."s CD!", "CHANNEL", nil, channelid);
+								elseif channeldrop == 1 then
+									-- Do nothing
 								else
 									SendChatMessage(">>>MISSED<<< "..myspell.." on "..mytarget.." ("..mytyp..") - "..duration.."s CD!",channel)
 								end
 							else
-								if channeldrop == 5 then
+								if channeldrop == 6 then
 									SendChatMessage(myspell.." silenced "..mytarget.." - "..duration.."s CD!", "CHANNEL", nil, channelid);
+								elseif channeldrop == 1 then
+									-- Do nothing
 								else
 									SendChatMessage(myspell.." silenced "..mytarget.." - "..duration.."s CD!",channel)
 								end
@@ -479,8 +542,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 				_,_,_,_,TalentsIn=GetTalentInfo(3,8)
 				if TalentsIn>0 then
 					if Cia_Settings[myspell] == 1 then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(myspell.."ned "..mytarget.."!", "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(myspell.."ned "..mytarget.."!",channel)
 						end
@@ -489,72 +554,90 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 			end
 		elseif myspell == "Earthshaker" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Hammer_04" then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage(myspell.." stunned "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage(myspell.." stunned "..mytarget.."!",channel)
 				end
 			end
 		elseif myspell == "Glimpse of Madness" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Axe_24" then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage(myspell.." disoriented "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage(myspell.." disoriented "..mytarget.."!",channel)
 				end
 			end
 		elseif myspell == "Armor Shatter" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Axe_12" then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage(myspell.."'d (1) "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage(myspell.."'d (1) "..mytarget.."!",channel)
 				end
 			end
 		elseif myspell == "Armor Shatter (2)" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Axe_12" then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage("Armor Shatter'd (2) "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage("Armor Shatter'd (2) "..mytarget.."!",channel)
 				end
 			end
 		elseif myspell == "Armor Shatter (3)" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Axe_12" then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage("Armor Shatter'd (3) "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage("Armor Shatter'd (3) "..mytarget.."!",channel)
 				end
 			end
 		elseif myspell == "Spell Vulnerability" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Axe_12" and GetInventoryItemTexture("player",17) == nil then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage("Nightfall procc'd "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage("Nightfall procc'd "..mytarget.."!",channel)
 				end
 			end
 		elseif myspell == "Puncture Armor" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Mace_15" or GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Pick_05" then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage(myspell.."'d (1) "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage(myspell.."'d (1) "..mytarget.."!",channel)
 				end
 			end
 		elseif myspell == "Puncture Armor (2)" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Mace_15" or GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Pick_05" then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage("Puncture Armor'd (2) "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage("Puncture Armor'd (2) "..mytarget.."!",channel)
 				end
 			end
 		elseif myspell == "Puncture Armor (3)" then
 			if GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Mace_15" or GetInventoryItemTexture("player",16) == "Interface\\Icons\\INV_Pick_05" then
-				if channeldrop == 5 then
+				if channeldrop == 6 then
 					SendChatMessage("Puncture Armor'd (3) "..mytarget.."!", "CHANNEL", nil, channelid);
+				elseif channeldrop == 1 then
+					-- Do nothing
 				else
 					SendChatMessage("Puncture Armor'd (3) "..mytarget.."!",channel)
 				end
@@ -570,8 +653,10 @@ function Cia_Send(mytarget, myspell, intspell, mytyp)
 				if Cia_Settings[lockspell] == 1 then
 					if cooldown > tonumber(duration)-0.4 then
 						if intspell ~= "" then
-							if channeldrop == 5 then
+							if channeldrop == 6 then
 								SendChatMessage(lockspell.." interrupted "..mytarget.."'s "..intspell.." - "..duration.."s CD!", "CHANNEL", nil, channelid);
+							elseif channeldrop == 1 then
+								-- Do nothing
 							else
 								SendChatMessage(lockspell.." interrupted "..mytarget.."'s "..intspell.." - "..duration.."s CD!",channel)
 							end
@@ -611,8 +696,10 @@ function Cia_Tell(spell, target, hitType, cooldown)
 			if spell == Interrupts then
 				for k,IntTargets in pairs(IntTargets) do
 					if target == IntTargets then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(msg, "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(msg,channel)
 						end
@@ -625,8 +712,10 @@ function Cia_Tell(spell, target, hitType, cooldown)
 			if spell == Stuns then
 				for k,StunTargets in pairs(StunTargets) do
 					if target == StunTargets then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(msg, "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(msg,channel)
 						end
@@ -639,8 +728,10 @@ function Cia_Tell(spell, target, hitType, cooldown)
 			if spell == SpecialStuns then
 				for k,StunTargets in pairs(StunTargets) do
 					if target == StunTargets then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(msg, "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(msg,channel)
 						end
@@ -653,8 +744,10 @@ function Cia_Tell(spell, target, hitType, cooldown)
 			if spell == SpecialInterrupts then
 				for k,IntTargets in pairs(IntTargets) do
 					if target == IntTargets then
-						if channeldrop == 5 then
+						if channeldrop == 6 then
 							SendChatMessage(msg, "CHANNEL", nil, channelid);
+						elseif channeldrop == 1 then
+							-- Do nothing
 						else
 							SendChatMessage(msg,channel)
 						end
@@ -809,6 +902,7 @@ end
 
 function Cia:OnEvent()
 	if event == "ADDON_LOADED" and arg1 == "ClassInterruptAnnounce" then
+		
         CiaOnUpdateActivate("fetchspells")
 		Cia.Options:Gui()
 		Cia.Minimap:CreateMinimapIcon()
@@ -1037,8 +1131,10 @@ function Cia:OnEvent()
 		if GameTooltipTextLeft1:GetText() == "Suppression Device" then
 			if arg1 == "Disarm Trap" then
 				if Cia_Settings["Disarm Trap"] == 1 then
-					if channeldrop == 5 then
+					if channeldrop == 6 then
 						SendChatMessage("I'm disarming this trap!", "CHANNEL", nil, channelid);
+					elseif channeldrop == 1 then
+						-- Do nothing
 					else
 						SendChatMessage("I'm disarming this trap!",channel)
 					end
@@ -1172,6 +1268,14 @@ function Cia.Options:Gui()
 	self.HeadText:SetTextColor(255, 255, 0, 1)
 	self.HeadText:SetShadowOffset(2,-2)
 	self.HeadText:SetText(Cia_GetClassColorForName(UnitClass("player")).."Class |cffffffffInterrupt |cffff0000Announce |cffffff00- Options")
+
+	--version text
+	self.VersionText = self.Background.Topleft:CreateFontString(nil, "OVERLAY")
+	self.VersionText:SetPoint("TOP",190,-60)
+	self.VersionText:SetFont("Fonts\\FRIZQT__.TTF", 10)
+	self.VersionText:SetTextColor(255, 255, 0, 1)
+	self.VersionText:SetShadowOffset(2,-2)
+	self.VersionText:SetText("V: "..Cia_Version_Msg)
 
 	-- a texture
 	local r, l, t, b = Cia:ClassPos(UnitClass("player"))
@@ -1487,7 +1591,7 @@ function Cia.Options:Gui()
 	end
 		
 
-	self.ChannelDropdown = CreateFrame("Button", "Channel Dropdown",self, "UIDropDownMenuTemplate")
+	self.ChannelDropdown = CreateFrame("Button", "ChannelDropdown",self, "UIDropDownMenuTemplate")
 	self.ChannelDropdown:SetPoint("TOP", 25 , -385)
 
 	local text = self.ChannelDropdown:CreateFontString(nil, "OVERLAY")
@@ -1501,7 +1605,7 @@ function Cia.Options:Gui()
 	UIDropDownMenu_SetSelectedID(self.ChannelDropdown, Cia_Settings["channel"])
 
 	-- CustomChannelEditBox
-	self.CustomChannelEditBox = CreateFrame("EditBox",CustomChannelEditBox,self.Class,"InputBoxTemplate")
+	self.CustomChannelEditBox = CreateFrame("EditBox","CustomChannelEditBox",self.Class,"InputBoxTemplate")
 	self.CustomChannelEditBox:SetFontObject("GameFontHighlight")
 	self.CustomChannelEditBox:SetFrameStrata("MEDIUM")
 	self.CustomChannelEditBox:SetPoint("TOP", 90 , -260)
@@ -1511,37 +1615,73 @@ function Cia.Options:Gui()
 	self.CustomChannelEditBox:ClearFocus()
 	self.CustomChannelEditBox:SetText(UnitName("player"))
 	self.CustomChannelEditBox:SetScript("OnEscapePressed", function()
-		if self.CustomChannelEditBox:GetText() ~= "" then
-			local n = self.CustomChannelEditBox:GetText()
-			if n then
-				local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
-				Cia.Options.CustomChannelEditBox:SetText(name)
-				print("Custom channel set to: |cffffff00"..name.."|r")
-			end
-			
+		self.CustomChannelEditBox:ClearFocus()
+
+		local inputChannel = self.CustomChannelEditBox:GetText()
+
+		if inputChannel == "" then
+			print("|cffff0000You need to enter a channel name in the editbox.|r Resetting channel name back to |cffffff00"..Cia_Settings["customchannel"].."|r")
+			self.CustomChannelEditBox:SetText(Cia_Settings["customchannel"])
 			New_Custom_Channel = self.CustomChannelEditBox:GetText()
 			Cia_ChangeChannel()
-		else
-			print("|cffff0000You need to enter a channel name in the editbox.|r")
+			return
 		end
-		self.CustomChannelEditBox:ClearFocus()
+
+		for k, BlackListed in pairs(Cia_BlackListed_Channels) do
+			if inputChannel == BlackListed then
+				print("|cffff0000You can't use the |cffffff00"..self.CustomChannelEditBox:GetText().." |cffff0000channel.|r Resetting channel name back to |cffffff00"..Cia_Settings["customchannel"].."|r")
+				self.CustomChannelEditBox:SetText(Cia_Settings["customchannel"])
+				New_Custom_Channel = self.CustomChannelEditBox:GetText()
+				Cia_ChangeChannel()
+				return
+			end
+		end
+
+		local n = self.CustomChannelEditBox:GetText()
+		if n then
+			local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
+			Cia.Options.CustomChannelEditBox:SetText(name)
+			print("Custom announce channel set to: |cffffff00"..name.."|r")
+			
+			-- Spara och byt till den nya kanalen
+			New_Custom_Channel = self.CustomChannelEditBox:GetText()
+			Cia_ChangeChannel()
+		end
 	end)
 
 	self.CustomChannelEditBox:SetScript("OnEnterPressed", function()
-		if self.CustomChannelEditBox:GetText() ~= "" then
-			local n = self.CustomChannelEditBox:GetText()
-			if n then
-				local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
-				Cia.Options.CustomChannelEditBox:SetText(name)
-				print("Custom channel set to: |cffffff00"..name.."|r")
-			end
-			
+		self.CustomChannelEditBox:ClearFocus()
+
+		local inputChannel = self.CustomChannelEditBox:GetText()
+
+		if inputChannel == "" then
+			print("|cffff0000You need to enter a channel name in the editbox.|r Resetting channel name back to |cffffff00"..Cia_Settings["customchannel"].."|r")
+			self.CustomChannelEditBox:SetText(Cia_Settings["customchannel"])
 			New_Custom_Channel = self.CustomChannelEditBox:GetText()
 			Cia_ChangeChannel()
-		else
-			print("|cffff0000You need to enter a channel name in the editbox.|r")
+			return
 		end
-		self.CustomChannelEditBox:ClearFocus()
+
+		for k, BlackListed in pairs(Cia_BlackListed_Channels) do
+			if inputChannel == BlackListed then
+				print("|cffff0000You can't use the |cffffff00"..self.CustomChannelEditBox:GetText().." |cffff0000channel.|r Resetting channel name back to |cffffff00"..Cia_Settings["customchannel"].."|r")
+				self.CustomChannelEditBox:SetText(Cia_Settings["customchannel"])
+				New_Custom_Channel = self.CustomChannelEditBox:GetText()
+				Cia_ChangeChannel()
+				return
+			end
+		end
+
+		local n = self.CustomChannelEditBox:GetText()
+		if n then
+			local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
+			Cia.Options.CustomChannelEditBox:SetText(name)
+			print("Custom announce channel set to: |cffffff00"..name.."|r")
+			
+			-- Spara och byt till den nya kanalen
+			New_Custom_Channel = self.CustomChannelEditBox:GetText()
+			Cia_ChangeChannel()
+		end
 	end)
 
 	self.CustomChannelEditBox:SetScript("OnChar", function()
@@ -1559,7 +1699,7 @@ function Cia.Options:Gui()
 	text:SetFont("Fonts\\FRIZQT__.TTF", 10)
 	text:SetTextColor(1, 1, 1, 1)
 	text:SetShadowOffset(2,-2)
-	text:SetText("Enter custom channel:")
+	text:SetText("Enter Custom channel:")
 
 	-- minimap option
 	self.CheckboxMinimap = CreateFrame("CheckButton", "Minimap", self, "UICheckButtonTemplate")
@@ -1787,21 +1927,38 @@ function Cia.Options:ChannelDrop()
 			Cia_Settings["channel"] = this:GetID()
 			local colorchannel = Cia_Channels[Cia_Settings["channel"]]
 			local selectedchannel = string.gsub(colorchannel,"|cff(.)(.)(.)(.)(.)(.)", "")
-
-			if selectedchannel == "CUSTOM" then
+			if selectedchannel == "NONE" then
+				LeaveChannelByName(Cia_Settings["customchannel"]);
+				Cia.Options.CustomChannelEditBox:Hide()
+				print("Will not announce anywhere.|r")
+			elseif selectedchannel == "CUSTOM" then
 				Cia.Options.CustomChannelEditBox:Show()
+
 				if Cia.Options.CustomChannelEditBox:GetText() ~= "" then
 					local n = Cia_Settings["customchannel"]
-					if n then
-						local name = string.upper(string.sub(n,1,1))..string.lower(string.sub(n,2))
-						Cia.Options.CustomChannelEditBox:SetText(name)
-						print("Custom channel set to: |cffffff00"..name.."|r")
-					end
 
-					New_Custom_Channel = Cia.Options.CustomChannelEditBox:GetText()
-					Cia_ChangeChannel()
+					if n then
+						for k, BlackListed in pairs(Cia_BlackListed_Channels) do
+							if n == BlackListed then
+								print("|cffff0000You can't use the |cffffff00"..self.CustomChannelEditBox:GetText().." |cffff0000channel.|r Resetting channel name back to |cffffff00"..Cia_Settings["customchannel"].."|r")
+								self.CustomChannelEditBox:SetText(Cia_Settings["customchannel"])
+								New_Custom_Channel = self.CustomChannelEditBox:GetText()
+								Cia_ChangeChannel()
+								return
+							end
+						end
+
+						local name = string.upper(string.sub(n, 1, 1)) .. string.lower(string.sub(n, 2))
+						Cia.Options.CustomChannelEditBox:SetText(name)
+						print("Custom announce channel set to: |cffffff00"..name.."|r")
+						
+						-- Uppdatera till den nya kanalen och anropa kanaländringsfunktionen
+						New_Custom_Channel = Cia.Options.CustomChannelEditBox:GetText()
+						Cia_ChangeChannel()
+					end
 				else
-					print("|cffff0000You need to enter a channel name in the editbox.|r")
+					print("|cffff0000You need to enter a channel name in the editbox.|r Resetting channel name back to |cffffff00"..Cia_Settings["customchannel"].."|r")
+					self.CustomChannelEditBox:SetText(Cia_Settings["customchannel"])
 				end
 
 				channelid = GetChannelName(Cia_Settings["customchannel"])
@@ -1833,12 +1990,40 @@ function Cia.Options:ChannelDrop()
 end
 
 function CiaDefault()
+
 	if Cia_Settings["channel"] == nil then
 		Cia_Settings["channel"] = 1
+		
+		local channelNumber = Cia_Settings["channel"]
+		local channelText = "Invalid channel"
+
+		for k, channel in pairs(Cia_Channels) do
+			if channelNumber == k then
+				channelText = channel
+				break
+			end
+		end
+
 		UIDropDownMenu_SetSelectedID(Cia.Options.ChannelDropdown, Cia_Settings["channel"])
+		UIDropDownMenu_SetText(channelText or "None", Cia.Options.ChannelDropdown)
+
 		local colorchannel = Cia_Channels[Cia_Settings["channel"]]
 		channel = string.gsub(colorchannel,"|cff(.)(.)(.)(.)(.)(.)", "")
 	else
+
+		local channelNumber = Cia_Settings["channel"]
+		local channelText = "Invalid channel"
+		-- Iterera över Cia_Channels
+		for k, channel in pairs(Cia_Channels) do
+			if channelNumber == k then
+				channelText = channel
+				break
+			end
+		end
+			
+		UIDropDownMenu_SetSelectedID(Cia.Options.ChannelDropdown, Cia_Settings["channel"])
+		UIDropDownMenu_SetText(channelText or "None", Cia.Options.ChannelDropdown)
+
 		local colorchannel = Cia_Channels[Cia_Settings["channel"]]
 		channel = string.gsub(colorchannel,"|cff(.)(.)(.)(.)(.)(.)", "")
 	end
@@ -1847,7 +2032,7 @@ function CiaDefault()
 		Cia_Settings["customchannel"] = "Cia"; -- The default used (private chan, guild, say, party etc)
 	end
 
-	if  Cia_Settings["channel"] == 5 then
+	if  Cia_Settings["channel"] == 6 then
 		Cia.Options.CustomChannelEditBox:Show()
 		local n = Cia_Settings["customchannel"]
 		if n then

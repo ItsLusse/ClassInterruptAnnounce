@@ -214,13 +214,92 @@ local IntTargets = { -- List of npcs you'll announce when interrupting
 	"Zealot Lor'Khan",
 	"Voodoo Slave",
 	-- 10man and under
-	-- Wailing Caverns
-	"Druid of the Fang",
-	-- Deadmines
-	"Goblin Engineer",
 	-- Ragefire Chasm
 	"Ragefire Shaman",
 	"Searing Blade Warlock",
+	-- Wailing Caverns
+	"Druid of the Fang",
+	"Lady Anacondra",
+	"Lord Cobrahn",
+	"Lord Pythas",
+	"Lord Serpentis",
+	"Mutanus the Devourer",
+	-- Deadmines
+	"Goblin Engineer",
+	-- Shadowfang Keep
+	"Lupine Horror",
+	"Wolf Master Nandos",
+	"Archmage Arugal",
+	-- Blackfathom Deeps
+	"Twilight Lord Kelris",
+	"Aku'mai Servant",
+	-- Razorfen Kraul
+	"Death's Head Acolyte",
+	"Death Speaker Jargba",
+	"Charlga Razorflank",
+	-- Gnomeregan
+	"Electrocutioner 6000",
+	"Dark Iron Ambassador",
+	"Dark Iron Agent",
+	-- Crescent Grove
+	"Wallowing Spirit",
+	-- Razorfen Downs
+	"Mordresh Fire Eye",
+	"Ragglesnout",
+	-- Scarlet Monastery
+	"Azshir the Sleepless",
+	"Scarlet Adept",
+	"Scarlet Diviner",
+	"Arcanist Doan",
+	-- Uldaman
+	"Shadowforge Geologist",
+	"Galgann Firehammer",
+	-- Zul Farak
+	"Antu'sul",
+	"Witch Doctor Zum'rah",
+	"Shadowpriest Sezz'ziz",
+	-- Maraudon
+	"Celebras the Cursed",
+	-- Sunken Temple
+	"Jammal'an the Prophet",
+	-- Blackrock Depths
+	"Anvilrage Marshal",
+	"Anvilrage Medic",
+	"Golem Lord Argelmach",
+	"Shadowforge Peasant",
+	"Anvilrage Officer",
+	"Fineous Darkvire",
+	"Plugger Spazzring",
+	"Doomforge Arcanasmith",
+	"Seeth'rel",
+	"Hate'rel",
+	"Vile'rel",
+	"Doom'rel",
+	--"Phalanx",
+	"Magmus",
+	"Shadowforge Senator",
+	"Twiligt Hammer Ambassador",
+	"Princess Moira Bronzebeard",
+	"Bael'Gar",
+	-- LBRS
+	--"Scarshield Acolyte",
+	--"Scarshield Spellbinder",
+	"Scarshield Warlock",
+	"Smolderthorn Mystic",
+	"Smolderthorn Shadow Priest",
+	"Smolderthorn Berserker",
+	"Smolderthorn Witch Doctor",
+	"Smolderthorn Seer",
+	--"Firebrand Invoker",
+	--"Firebrand Darkweaver",
+	"Firebrand Dreadweaver",
+	"Bloodaxe Summoner",
+	--Scholomance
+	"Scholomance Acolyte",
+	"Scholomance Dark Summoner",
+	"Diseased Ghoul",
+	"Ras Frostwhisper",
+	
 	-- MURLOCS
 	"Murloc Oracle",
 	"Murloc Tidecaller",
@@ -229,6 +308,7 @@ local IntTargets = { -- List of npcs you'll announce when interrupting
 	"Bluegill Oracle",
 	"Blackfathom Tide Priestess",
 	"Murloc Coastrunner",
+	"Torn Fin Oracle",
 	-- Other
 	"Kurzen Medicine Man",
 }
@@ -266,14 +346,87 @@ local StunTargets = { -- List of npcs you'll announce when stunning
 	"Giant Claw Tentacle",
 
 	-- 10man and under
-	-- Wailing Caverns
-	"Druid of the Fang",
-	-- Deadmines
-	"Goblin Engineer",
-	"Edwin VanCleef",
 	-- Ragefire Chasm
 	"Ragefire Shaman",
 	"Searing Blade Warlock",
+	"Searing Blade Enforcer",
+	-- Wailing Caverns
+	"Druid of the Fang",
+	"Lady Anacondra",
+	"Lord Cobrahn",
+	"Lord Pythas",
+	"Lord Serpentis",
+	-- Deadmines
+	"Goblin Engineer",
+	"Edwin VanCleef",
+	-- Shadowfang Keep
+	"Lupine Horror",
+	"Wolf Master Nandos",
+	-- Blackfathom Deeps
+	"Twilight Lord Kelris",
+	"Aku'mai Servant",
+	-- Razorfen Kraul
+	"Death's Head Acolyte",
+	"Death Speaker Jargba",
+	"Charlga Razorflank",
+	-- Gnomeregan
+	"Electrocutioner 6000",
+	"Dark Iron Ambassador",
+	"Dark Iron Agent",
+	-- Crescent Grove
+	"Wallowing Spirit",
+	-- Razorfen Downs
+	"Mordresh Fire Eye",
+	"Ragglesnout",
+	-- Scarlet Monastery
+	"Azshir the Sleepless",
+	"Scarlet Monk",
+	"Scarlet Myrmidon",
+	"Arcanist Doan",
+	-- Uldaman
+	"Shadowforge Geologist",
+	-- Sunken Temple
+	"Atal'ai Witch Doctor",
+	-- Blackrock Depths
+	"Anvilrage Marshal",
+	"Anvilrage Medic",
+	"Shadowforge Peasant",
+	"Anvilrage Officer",
+	"Fineous Darkvire",
+	"Doomforge Arcanasmith",
+	"Seeth'rel",
+	"Hate'rel",
+	"Vile'rel",
+	"Doom'rel",
+	--"Phalanx",
+	"Shadowforge Senator",
+	"Twiligt Hammer Ambassador",
+	"Princess Moira Bronzebeard",
+	-- LBRS
+	--"Scarshield Acolyte",
+	--"Scarshield Spellbinder",
+	"Scarshield Warlock",
+	"Smolderthorn Mystic",
+	"Smolderthorn Shadow Priest",
+	"Smolderthorn Berserker",
+	"Smolderthorn Witch Doctor",
+	"Smolderthorn Seer",
+	--"Firebrand Invoker",
+	--"Firebrand Darkweaver",
+	"Firebrand Dreadweaver",
+	"Spirestone Warlord",
+	"Spirestone Battle Mage",
+	"Bloodaxe Warmonger",
+	"Bloodaxe Summoner",
+	"Quartermaster Zigris",
+	"Overlord Wyrmthalak",
+	--Scholomance
+	"Scholomance Acolyte",
+	"Scholomance Dark Summoner",
+	"Spectral Tutor",
+	"Diseased Ghoul",
+	"Ras Frostwhisper",
+
 	-- MURLOCS
 	"Murloc Oracle",
 	"Murloc Tidecaller",
@@ -282,6 +435,7 @@ local StunTargets = { -- List of npcs you'll announce when stunning
 	"Bluegill Oracle",
 	"Blackfathom Tide Priestess",
 	"Murloc Coastrunner",
+	"Torn Fin Oracle",
 	-- Other
 	"Kurzen Medicine Man",
 }
